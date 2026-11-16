@@ -88,13 +88,18 @@ describe('createSearchController', () => {
     const controller = createSearchController({ searchFn, debounceMs: 300 });
     controller.subscribe(() => {});
 
+    // 1. первый ввод → прокручиваем debounce, чтобы searchFn реально вызвался
     controller.search('sp');
-    const firstSignal = searchFn.mock.calls[0]?.[1] as AbortSignal | undefined;
+    vi.advanceTimersByTime(300);
 
-    controller.search('spain'); // новый ввод до истечения debounce
+    expect(searchFn).toHaveBeenCalledTimes(1);
+    const firstSignal = searchFn.mock.calls[0]?.[1] as AbortSignal;
+    expect(firstSignal.aborted).toBe(false);
 
-    // abort первого сигнала должен произойти синхронно
-    expect(firstSignal?.aborted).toBe(true);
+    // 2. второй ввод → abort должен сработать СИНХРОННО (до debounce)
+    controller.search('spain');
+
+    expect(firstSignal.aborted).toBe(true);
   });
 
   it('retry повторяет последний запрос', async () => {
