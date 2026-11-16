@@ -33,3 +33,10 @@ export interface Country {
   population: number;
   languages: string[];
 }
+export type ErrorKind = 'abort' | 'timeout' | 'http' | 'unknown';
+
+export interface ClassifiedError {
+  kind: ErrorKind;
+  message: string;
+  status?: number;
+}

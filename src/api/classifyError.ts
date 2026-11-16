@@ -1,12 +1,5 @@
+import type { ClassifiedError } from '../types.js';
 import { HttpError } from './HttpError.js';
-
-export type ErrorKind = 'abort' | 'timeout' | 'http' | 'unknown';
-
-export interface ClassifiedError {
-  kind: ErrorKind;
-  message: string;
-  status?: number;
-}
 
 export function classifyError(err: unknown): ClassifiedError {
   if (err instanceof DOMException && err.name === 'AbortError') {
