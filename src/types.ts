@@ -40,3 +40,10 @@ export interface ClassifiedError {
   message: string;
   status?: number;
 }
+
+export type SearchState =
+  | { kind: 'idle' }
+  | { kind: 'loading' }
+  | { kind: 'success'; data: RawCountry[] }
+  | { kind: 'empty' }
+  | { kind: 'error'; message: string };
