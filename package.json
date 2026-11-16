@@ -10,7 +10,8 @@
     "format:check": "prettier --check .",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
-    "prepare": "husky"
+    "prepare": "husky",
+    "build": "tsc && node scripts/build-static.mjs"
   },
   "repository": {
     "type": "git",
