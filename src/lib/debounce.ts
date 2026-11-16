@@ -1,4 +1,7 @@
-export type DebouncedFunction<Args extends unknown[]> = (...args: Args) => void;
+export type DebouncedFunction<Args extends unknown[]> = {
+  (...args: Args): void;
+  cancel(): void;
+};
 
 export function debounce<Args extends unknown[]>(
   fn: (...args: Args) => void,
@@ -6,7 +9,7 @@ export function debounce<Args extends unknown[]>(
 ): DebouncedFunction<Args> {
   let timerId: ReturnType<typeof setTimeout> | null = null;
 
-  return (...args: Args): void => {
+  const debounced = (...args: Args): void => {
     if (timerId !== null) {
       clearTimeout(timerId);
     }
@@ -15,4 +18,13 @@ export function debounce<Args extends unknown[]>(
       fn(...args);
     }, delay);
   };
+
+  debounced.cancel = (): void => {
+    if (timerId !== null) {
+      clearTimeout(timerId);
+      timerId = null;
+    }
+  };
+
+  return debounced;
 }

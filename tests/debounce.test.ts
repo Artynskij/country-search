@@ -50,4 +50,27 @@ describe('debounce', () => {
     expect(fn).toHaveBeenCalledTimes(1);
     expect(fn).toHaveBeenCalledWith('third');
   });
+  it('cancel отменяет запланированный вызов', () => {
+    const fn = vi.fn();
+    const debounced = debounce(fn, 300);
+
+    debounced('a');
+    debounced.cancel();
+
+    vi.advanceTimersByTime(300);
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  it('после cancel можно снова запланировать вызов', () => {
+    const fn = vi.fn();
+    const debounced = debounce(fn, 300);
+
+    debounced('a');
+    debounced.cancel();
+    debounced('b');
+    vi.advanceTimersByTime(300);
+
+    expect(fn).toHaveBeenCalledTimes(1);
+    expect(fn).toHaveBeenCalledWith('b');
+  });
 });
